@@ -1,0 +1,603 @@
+---
+title: "Bioinformatics Analysis - Breast cancer ovarian metastases show increased activity of GPCR pathways 2022"
+author: "Osama Shiraz Shah"
+updated on: "`r Sys.Date()`"
+output: 
+  prettydoc::html_pretty:
+    theme: Cayman
+  md_document:
+    variant: markdown_github
+editor_options: 
+  chunk_output_type: inline
+---
+
+<style type="text/css">
+.main-container {
+  max-width: 1800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+
+
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = T, warning = F, message = F)
+```
+
+
+
+# PREPARATION
+```{r}
+
+# Install all these packages
+#>.....
+
+# PREPARE ENVIRONMENT
+source("helperFunctions.R")
+
+# LOAD INPUT RNASEQ DATA AND ANNOTATIONS
+source("./preparation/a.prepare_RNAseq_exp_mats.R")
+source("./preparation/b.prepare_annotations.R")
+clinData = prepareAnnotations()
+
+source("./preparation/load_colors.R")
+#source("./preparation/c.prepare_DNAseq_mat.R")
+
+# Supplementary data 2 
+icesTAF::mkdir("../output/supplementary_data")
+writexl::write_xlsx(subset(clinData, Study_Code %in% "Ovary" & TissueType %notin% "Normal"), 
+                    path = "../output/supplementary_data/Supplementary data 2 - PAM50 and tumor purity.xlsx")
+
+
+
+```
+
+# LOAD RESOURCES
+```{r}
+
+
+# SEPERATE SCRIPTS FOR 
+  # DNAseq QC
+    # TarQC data.frame
+  # DNAseq analysis
+    # Final variants (annotation & Filtering) data.frame
+  # CNV data
+    # clean Data frame
+  # RNAseq QC
+    # Qorts data.frame
+  # RNAseq dataframes
+    # PAM50, ESTIMATE, ConsensusTME data.frame
+    # DEG analysis data.frame
+  # Genesets
+
+
+
+
+# load clinical data (remove NOT sure) - add PAM50, Tumor purity, Immune
+#  Fig 1A - Clinical data pie chart
+#  Sup Fig 1 - Met site and histology association
+
+
+# Mutation Analysis
+# Sup Fig 2A/B - Mammaseq QC
+# Sup Fig 2C - SNV count before/after
+
+# Fig 2A - mutational freq changes - paired
+# Sup Fig 3A - mutational freq changes ALL
+# Fig 2B - Oncorpint - paired samples
+# Sup Fig 3B - Oncoprint ALL
+# Fig 2D - CNV plot
+# Sup Fig 3C - Clinical sig variants
+# Sup Fig 3D - Clincal sig variants oncoprint
+
+
+# load RNAseq - cts, tpm, gene leve, ens level
+# Sup Fig 5a - read insert size, read mean GC, mapped reads plots
+# Sup Fig 5b - TumorMatch (no outlier)
+# Sup Fig 5c - Heatmap - euclidean distances (no outlier)
+# Sup Fig 5d - PCA plots
+
+# Fig 3a - PAM50 - scores
+# Fig 3b - PAM50 - barplots All, ILC, mDLC, IDC
+# Fig 3c - PAM50 metastatic tumors
+# Fig 3d - CDH1 expression in ILC, IDC and mDLC mets
+
+# Sup Fig 6b/c - background correction
+
+# Fig 4a - DEG volcano plots - before and after filtering
+# Fig 4b - DEG heatmap
+# Fig 4c - Pathway analysis
+# Fig 4d - top DEG genes
+# Fig 4e - CASR expression
+
+# Sup Fig 7 - CASR in normal ovary vs breast
+
+# Sup Fig 8 - Glutamate receptor family
+
+
+# load DNAseq - 
+
+# Sup Fig 1 - top
+
+
+
+  
+
+```
+
+
+# Figure 1A - Clinicopathological of ovarian metastasis cohort
+```{r}
+
+# get ovary metastasis cohort
+clinData_Ovary_Met_Pri = subset(clinData, Subtype %in% c("IDC","ILC","mDLC") & 
+                                  TissueType %notin% "Normal" & 
+                                  Study_Code %in% "Ovary")
+clinData_Ovary_Met = subset(clinData_Ovary_Met_Pri, TissueType %in% "Metastasis") # get only metastasis
+paired_orphan = as.data.frame(table(clinData_Ovary_Met$Paired))
+clinData_Ovary_Met = clinData_Ovary_Met[order(clinData_Ovary_Met$Subtype, clinData_Ovary_Met$Paired, clinData_Ovary_Met$ER_infered),] # reorder
+
+# plot
+library(circlize)
+
+circos.clear()
+circos.par(start.degree = 76, gap.degree = 30)
+circos.heatmap((clinData_Ovary_Met$Subtype), col = annot_col$Subtype)
+circos.heatmap((clinData_Ovary_Met$Paired), col = annot_col$`Metastasis Type`)
+circos.heatmap((clinData_Ovary_Met$ER_infered), col = annot_col$ER)
+
+fig1a = recordPlot()
+circos.clear()
+dev.off()
+
+fig1a
+
+# percentages
+100*table(clinData_Ovary_Met$Subtype)/dim(clinData_Ovary_Met)[1]
+100*table(clinData_Ovary_Met$Paired)/dim(clinData_Ovary_Met)[1]
+100*table(clinData_Ovary_Met$ER_infered)/dim(clinData_Ovary_Met)[1]
+
+```
+
+
+# Sup Figure 1 - Association between ovarian metastasis and histological subtype 
+```{r, fig.width=4, fig.height=4.5}
+
+# get mets from ovary metastasis and breastMET cohort
+clinData_mets = subset(clinData, TissueType %in% "Metastasis" & Subtype %in% c("IDC","ILC","mDLC") & 
+                         TissueType %notin% c("Normal") & TissueSite %notin% "NOT SURE")
+clinData_mets$TissueSite = as.character(clinData_mets$TissueSite)
+addmargins(table(clinData_mets$Subtype, clinData_mets$TissueSite))
+subset(clinData_mets, Patient_ID %in% clinData_mets$Patient_ID[duplicated(clinData_mets$Patient_ID)])
+clinData_mets = clinData_mets[!duplicated(clinData_mets$Patient_ID),]
+
+clinData_mets_ovaryVSother = clinData_mets[,c("Subtype", "TissueSite")]
+clinData_mets_ovaryVSother$TissueSite = ifelse(as.character(clinData_mets_ovaryVSother$TissueSite) == "Ovary", "Ovary", "Other")
+clinData_mets_ovaryVSother$TissueSite = factor(clinData_mets_ovaryVSother$TissueSite, levels = c("Ovary","Other"))
+
+library(vcd)
+set.seed(123); vcd::assoc(table(clinData_mets_ovaryVSother$Subtype, clinData_mets_ovaryVSother$TissueSite), 
+                          main_gp = gpar(fontsize = 10, fontface="bold"), 
+                          legend = legend_resbased(fontsize = 12),
+                          gp = shading_max, labeling = labeling_values(value_type = c('observed'),
+                                                                       gp_varnames = gpar(fontsize = 0.1, fontface="bold"),
+                                                                       gp_labels = gpar(fontsize = 15, fontface="bold")))
+
+
+
+```
+
+
+# Sup Figure 5 - RNAseq QC and exploratory analysis
+
+### Sup Fig 5A - QC
+```{r}
+
+# LOAD QORTS DATA.FRAME
+load("../input/Qorts_QC_summary_df.Rdata")
+
+
+# INSERT SIZE
+supFig5a_1 = ggplot(summary_qc_df, aes(x = InsertSize_Mean))+
+  geom_density(fill="cyan",alpha = 0.5, color="white")+myTheme+xlab("Mean Insert Size")+
+  geom_vline(xintercept = median(summary_qc_df$InsertSize_Mean), color="red",linetype="dashed")+ylab("density")+
+  annotate("text", label="Median\n325.2", x = 390, y = 0.0075, size = 4, fontface="bold")+theme(axis.text.y = element_blank())
+
+
+# GC CONTENT
+supFig5a_2 = ggplot(summary_qc_df, aes(x = GC_byRead_Mean))+
+  geom_density(fill="cyan",alpha = 0.5, color="white")+myTheme+xlab("Read Mean GC %")+
+  geom_vline(xintercept = median(summary_qc_df$GC_byRead_Mean), color="red",linetype="dashed")+ ylab("density")+
+  annotate("text", label="Median\n37.43", x = 38.2, y = 0.4, size = 4, fontface="bold")+theme(axis.text.y = element_blank())
+
+
+# MAPPED READS
+summary_qc_df$`Mapped Reads (Million)`=summary_qc_df$ReadPairs_UniqueGene/1e6
+summary_qc_df[summary_qc_df$`Mapped Reads (Million)` >= 10,"Map QC"]="Pass"
+summary_qc_df[summary_qc_df$`Mapped Reads (Million)` <= 10,"Map QC"]="Fail"
+
+supFig5a_3 = ggplot(summary_qc_df, aes(y=`Mapped Reads (Million)`, x = reorder(ID,`Mapped Reads (Million)`),
+                           label = ID, color = factor(`Map QC`)))+
+  geom_point(size = 2) + myTheme + theme(axis.text.x = element_blank()) + xlab("Rank")+
+  geom_hline(yintercept = 10, color="red", linetype="dashed")+
+  ggrepel::geom_label_repel(data = subset(summary_qc_df, `Map QC` == "Fail"), show.legend = F) + scale_color_manual("Read QC", values = c("red","blue")) + theme(legend.position = c(0.37, 0.79))
+
+
+supFig5a_left = ggarrange(plotlist = list(supFig5a_1, supFig5a_2), ncol = 1, nrow = 2)
+supFig5a = ggarrange(plotlist = list(supFig5a_left, supFig5a_3), ncol = 2, nrow = 1)
+supFig5a
+
+# supFig5a_left_plotly = plotly::subplot(supFig5a_1, supFig5a_2, nrows = 2)
+# supFig5a_plotly = plotly::subplot(supFig5a_left_plotly, supFig5a_3)
+
+```
+
+
+```{r}
+#### OUTLIER SAMPLE
+excluded_samples = c("0006-56M") # failed mapping rate
+```
+
+
+
+### Sup Fig 5B - Tumor Match 
+```{r, fig.height=6, fig.width=7}
+
+load("../input/RNAseq_TumorMatch.Rdata")
+
+library(ComplexHeatmap)
+
+cols = c('green','white','red')
+clinData_select = subset(clinData, Subtype %in% c("IDC","ILC","mDLC") & 
+                           TissueType %notin% "Normal" & Study_Code %in% "Ovary" & 
+                           SampleID %notin% excluded_samples)
+
+clinData_select = subset(clinData_select, SampleID %in% rownames(tumorMatch.scores.df) & 
+                           Patient_ID %in% names(which(table(clinData_select$Patient_ID) > 1)))
+
+length(unique(clinData_select$Patient_ID))
+cols_ = c(RColorBrewer::brewer.pal(n = 9, name="Set1"),RColorBrewer::brewer.pal(n = 3, name="Set2"))
+names(cols_) = unique(clinData_select$Patient_ID)
+
+simMat = as.matrix(tumorMatch.scores.df[clinData_select$SampleID, clinData_select$SampleID])
+colnames(simMat) = clinData_select[colnames(simMat), "SimpleID"]
+colnames(simMat) = gsub(x = colnames(simMat), pattern = "M_",replacement = "M-")
+colnames(simMat) = gsub(x = colnames(simMat), pattern = "_",replacement = " ")#," - ",
+rownames(simMat) = colnames(simMat)
+set.seed(123); tumorMatch_HT = Heatmap(simMat, col = viridis::magma((100)), name = "TumorMatch",
+        bottom_annotation = HeatmapAnnotation(show_annotation_name = F,Patient_ID = clinData_select[, "Patient_ID"],col = list(Patient_ID = cols_)),
+        right_annotation = HeatmapAnnotation(show_annotation_name = F,which = "row", Patient_ID = clinData_select[, "Patient_ID"], 
+                                             col = list(Patient_ID = cols_)))
+draw(tumorMatch_HT, merge = T)
+
+```
+
+ 
+
+
+
+
+
+```{r}
+##### PREPARE INPUTS FOR EXPLORATORY ANALYSIS
+
+# Clinical Data
+clinData_select = subset(clinData, Subtype %in% c("IDC","ILC","mDLC") & 
+                           TissueType %notin% "Normal" & Study_Code %in% "Ovary" & 
+                           SampleID %notin% excluded_samples)
+dim(clinData_select)
+
+## VST normalization
+library(DESeq2)
+
+mode(cts)="integer"
+dds <- DESeqDataSetFromMatrix(countData = cts[, clinData_select$SampleID], 
+                              colData = clinData_select, design = ~TissueType+Patient_ID)
+dds <- estimateSizeFactors(dds)
+vstDF <- vst(dds, blind = TRUE) # TRANSFORMATION IS NOT EFFECTED BY EXPERIMENTAL DESIGN -> BLINE => TRUE
+```
+
+
+```{r}
+###### Top variable features
+selected_vstDF = vstDF
+selected_clinData = clinData_select
+
+
+## Variable Features
+feature.vars = apply(assay(selected_vstDF)[, selected_clinData$SampleID], MARGIN = 1, var)
+feature.vars = sort(feature.vars,decreasing = T)
+
+# top var gene PCA
+select_features = names(selected_vstDF)[1:(length(names(feature.vars))*10/100)] # top 10% variable genes
+```
+
+
+
+### Sup Fig 5C - Clustering Heatmap
+```{r, fig.height=6, fig.width=7}
+
+sampleDists <- as.matrix(dist(t(assay(vstDF[select_features, selected_clinData$SampleID]))))
+
+
+library(ComplexHeatmap)
+
+sampleDists = sampleDists[selected_clinData$SampleID, selected_clinData$SampleID]
+rownames(sampleDists)=clinData[rownames(sampleDists), "SimpleID"]
+
+colnames(sampleDists) = gsub(x = colnames(sampleDists), pattern = "M_",replacement = "M-")
+colnames(sampleDists) = gsub(x = colnames(sampleDists), pattern = "_",replacement = " ")
+rownames(sampleDists) = colnames(sampleDists)
+
+htAnnot = HeatmapAnnotation(show_legend = T, 
+                            Subtype = selected_clinData$Subtype, ER = selected_clinData$ER_infered, 
+                            `Tissue Type` = selected_clinData$TissueType, PAM50 = selected_clinData$PAM50,
+                            `Metastasis Type` = selected_clinData$Paired, Purity = selected_clinData$Estimate_Purity, 
+                            Immune = selected_clinData$Immune_Scores, col = annot_col,
+                            annotation_name_gp = gpar(fontsize = 12, fontface="bold", col="#616161"), 
+                            annotation_name_side = "left", simple_anno_size = unit(5,"mm"))
+
+set.seed(123); dist_ht = Heatmap(sampleDists, show_column_names = F, 
+                       show_row_names = T, name = "Euclidean\nDistance",show_heatmap_legend = T,
+                       row_names_side = "left", row_names_gp = gpar(fontsize = 10, fontface="bold"),
+                       row_dend_side = "right",column_dend_side = "bottom", 
+                       top_annotation =  htAnnot)
+draw(dist_ht, merge = T,  heatmap_legend_side = "right")
+
+```
+
+
+### Sup Fig 5D - PCA Analysis
+```{r}
+################################### Sup Fig 5D - PCA Analysis
+## Select Cohort and Clinical data
+# PCA
+set.seed(123); pca_res_ova_cohort <- prcomp(t(assay(selected_vstDF)[select_features,selected_clinData$SampleID]))
+
+PC_1 = 1
+PC_2 = 2
+
+plt_df = data.frame(PC1 = pca_res_ova_cohort$x[, PC_1], PC2 = pca_res_ova_cohort$x[, PC_2], 
+                  labels = selected_clinData$SampleID, 
+                  groups = selected_clinData$Study_Code,
+                  Subtype = selected_clinData$Subtype,
+                  TissueType = selected_clinData$TissueType,
+                  Site = selected_clinData$TissueSite,
+                  PAM50 = selected_clinData$PAM50,
+                  CDH1 = as.numeric(log2_tpm_genes["CDH1",selected_clinData$SampleID]),
+                  purity = selected_clinData$Estimate_Purity,
+                  ER = selected_clinData$ER,
+                  ER_infered = selected_clinData$ER_infered)
+
+summary(pca_res_ova_cohort)$importance
+prop <- as.data.frame(summary(pca_res_ova_cohort)[[6]])
+Propf <- round(prop[2,],3)*100
+
+dim(plt_df)
+
+# Plot discrete variables
+supFig5d_1 = ggplot(plt_df,  aes(x = PC1, y = PC2, color=(PAM50), label = labels))+myTheme+
+  geom_point(size = 4) + 
+  xlab(paste0("PC",PC_1," (",Propf[PC_1],"%)")) + ylab(paste0("PC",PC_2," (",Propf[PC_2],"%)")) + 
+  scale_color_manual("PAM50", values = annot_col$PAM50)+
+  theme(axis.text = element_blank())+ theme(legend.position = "right", legend.direction = "vertical")
+
+supFig5d_2 = ggplot(plt_df,  aes(x = PC1, y = PC2, color=(TissueType), label = labels))+myTheme+
+  geom_point(size = 4) + 
+  xlab(paste0("PC",PC_1," (",Propf[PC_1],"%)")) + ylab(paste0("PC",PC_2," (",Propf[PC_2],"%)")) + 
+  scale_color_manual("Tissue Type", values = annot_col$`Tissue Type`[c(1:2)])+
+  theme(axis.text = element_blank())+ theme(legend.position = "right", legend.direction = "vertical")#+
+
+supFig5d_3 = ggplot(plt_df,  aes(x = PC1, y = PC2, color=(Subtype), label = labels))+myTheme+
+  geom_point(size = 4) + 
+  xlab(paste0("PC",PC_1," (",Propf[PC_1],"%)")) + ylab(paste0("PC",PC_2," (",Propf[PC_2],"%)")) + 
+  scale_color_manual("Subtype", values = annot_col$Subtype[c(1:3)])+
+  theme(axis.text = element_blank())+ theme(legend.position = "right", legend.direction = "vertical")#+
+
+# plot continous variable
+supFig5d_4 = ggplot(plt_df,  aes(x = PC1, y = PC2, color=(purity), label = labels))+myTheme+
+  geom_point(size = 4) + scale_color_continuous("Purity", type = "viridis")+
+  xlab(paste0("PC",PC_1," (",Propf[PC_1],"%)")) + ylab(paste0("PC",PC_2," (",Propf[PC_2],"%)")) + 
+  theme(axis.text = element_blank())+ theme(legend.position = "right")
+
+###################################
+
+
+supFig5d = ggarrange(plotlist = list(supFig5d_2, supFig5d_4, supFig5d_1, supFig5d_3), ncol = 2, nrow = 2, 
+          widths = c(1.2, 1.2, 1, 1))
+supFig5d
+
+```
+
+
+
+# Figure 3 A & B. PAM50 subtyping and molecular landscape of ovary metastasis
+```{r}
+## LOAD PAM50 DATA
+pam50.output.df = read.delim("../output/annotations/PAM50/pam50_calls.txt")
+rownames(pam50.output.df)=pam50.output.df$X
+
+pam50.prob.df = read.delim("../output/annotations/PAM50/pam50_probs.txt")
+rownames(pam50.prob.df)=pam50.prob.df$X
+pam50.prob.df = pam50.prob.df[,-1]
+
+
+########################################### Figure 3A PAM50 score plot -------------------------------------------------
+
+# clinical data on ovary metastasis cohort exlcuding normal samples
+clinData_OvaryMetCohort_no_normal = subset(clinData, Subtype %in% c("IDC","ILC","mDLC") & 
+                                    TissueType %notin% "Normal" & 
+                                    Study_Code %in% "Ovary")
+
+# make pam50 score data frame
+df_PAM50_genefu_score = pam50.prob.df[clinData_OvaryMetCohort_no_normal$SampleID,]
+df_PAM50_genefu_score = as.data.frame(df_PAM50_genefu_score)
+df_PAM50_genefu_score$`PAM50 Final`=factor(pam50.output.df[rownames(df_PAM50_genefu_score),"PAM50.subtype"], levels = c("LumA", "LumB", "Basal", "Her2", "Normal"))
+df_PAM50_genefu_score$SampleID = rownames(df_PAM50_genefu_score)
+df_PAM50_genefu_melt = melt(df_PAM50_genefu_score)
+names(df_PAM50_genefu_melt)=c("PAM50 Final","SampleID","PAM50","Score")
+
+df_PAM50_genefu_melt$PAM50 <- factor(df_PAM50_genefu_melt$PAM50, levels = c( "Basal", "Her2","LumA", "LumB", "Normal"))
+df_PAM50_genefu_melt$Subtype = clinData_OvaryMetCohort_no_normal[df_PAM50_genefu_melt$SampleID,"Subtype"]
+df_PAM50_genefu_melt$Study_Code = clinData_OvaryMetCohort_no_normal[df_PAM50_genefu_melt$SampleID,"Study_Code"]
+df_PAM50_genefu_melt$TissueType = clinData_OvaryMetCohort_no_normal[df_PAM50_genefu_melt$SampleID,"TissueType"]
+df_PAM50_genefu_melt$ER = clinData_OvaryMetCohort_no_normal[df_PAM50_genefu_melt$SampleID, "ER"]
+df_PAM50_genefu_melt$HER2 = clinData_OvaryMetCohort_no_normal[df_PAM50_genefu_melt$SampleID, "HER2"]
+df_PAM50_genefu_melt$Patient_ID = clinData_OvaryMetCohort_no_normal[df_PAM50_genefu_melt$SampleID, "Patient_ID"]
+df_PAM50_genefu_melt$Patient_ID_2 = clinData_OvaryMetCohort_no_normal[df_PAM50_genefu_melt$SampleID, "SimpleID"]
+df_PAM50_genefu_melt$Paired = clinData_OvaryMetCohort_no_normal[df_PAM50_genefu_melt$SampleID, "Paired"]
+
+# order the samples for plot
+df_PAM50_genefu_melt$SampleID = factor(df_PAM50_genefu_melt$SampleID, 
+                                       levels = clinData_OvaryMetCohort_no_normal$SampleID[order(clinData_OvaryMetCohort_no_normal$Patient_ID,clinData_OvaryMetCohort_no_normal$TissueType, decreasing = T)])
+
+# fix names and order IDs
+df_PAM50_genefu_melt$ID = gsub(x = df_PAM50_genefu_melt$Patient_ID_2, pattern = "M_",replacement = "M-")
+df_PAM50_genefu_melt$ID = gsub(x = df_PAM50_genefu_melt$ID, pattern = "_",replacement = " ")
+df_PAM50_genefu_melt$ID = factor(df_PAM50_genefu_melt$ID, 
+                                      levels = rev(unique(df_PAM50_genefu_melt$ID[
+                                        order(paste0(df_PAM50_genefu_melt$Paired, 
+                                                     df_PAM50_genefu_melt$ID), decreasing = T)])))
+
+
+### Define PAM50 switching (if at least 1 pam50 subtype probs change by 0.25) ------
+sampleID_name_map = df_PAM50_genefu_melt[, c("SampleID", "ID")]
+sampleID_name_map = sampleID_name_map[!duplicated(sampleID_name_map$SampleID), ]
+rownames(sampleID_name_map) = as.character(sampleID_name_map$SampleID)
+sampleID_name_map$ID = as.character(sampleID_name_map$ID)
+
+matrix_name = levels(df_PAM50_genefu_melt$SampleID)
+PAM50_switch_mat = matrix("No", nrow = length(matrix_name), ncol = 1)
+rownames(PAM50_switch_mat) = levels(df_PAM50_genefu_melt$SampleID)
+
+for (met_ID in subset(clinData_OvaryMetCohort_no_normal, TissueType %in% "Metastasis")$SampleID) {
+  PatientID = clinData_OvaryMetCohort_no_normal[met_ID, "Patient_ID"]
+  pri_ID = subset(clinData_OvaryMetCohort_no_normal, TissueType %in% "Primary" & Patient_ID %in% PatientID)$SampleID
+  
+  if (length(pri_ID) > 0){
+    met_PAM50_scores = df_PAM50_genefu_score[met_ID, c("Basal", "Her2", "LumA", "LumB", "Normal")]
+    pri_PAM50_scores = df_PAM50_genefu_score[pri_ID, c("Basal", "Her2", "LumA", "LumB", "Normal")]
+    if (sum(abs(met_PAM50_scores - pri_PAM50_scores) > 0.25) > 0){
+      PAM50_switch_mat[met_ID,] = "Yes"
+    }
+  }
+}
+
+rownames(PAM50_switch_mat) = sampleID_name_map[rownames(PAM50_switch_mat), "ID"]
+PAM50_switch_mat = PAM50_switch_mat[,1]
+
+df_PAM50_genefu_melt$switch = PAM50_switch_mat[as.character(df_PAM50_genefu_melt$ID)]
+###-----
+```
+
+
+### Fig 3a - PAM50 scores
+```{r, fig.height=8, fig.width=5.5}
+## Prepare visualizations
+
+# panel A
+PAM50 = ggplot(df_PAM50_genefu_melt, aes(x = ID, y = factor(PAM50), fill = Score))+
+  geom_tile(alpha = 0.5, show.legend = T, color="black") + scale_fill_gradient("Score", low = "#FAFAFA", high = "#b71c1c") + 
+  myTheme+xlab("")+ylab("")+geom_text(show.legend = F, aes(label = round(Score,2), size = Score)) + 
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))+
+  coord_flip()+blankTheme + theme(plot.margin = unit(c(0,2,1.4,-1.8), "lines"), 
+                                  axis.text.y = element_blank(),
+                                  axis.ticks.y = element_blank(),
+                                  legend.position = "left") +
+  guides(color = FALSE, size = FALSE)
+
+
+# panel B
+tissue_type_col = ifelse(grepl(x=(levels(df_PAM50_genefu_melt$ID)),pattern = "M"), "#d32f2f","#388E3C")
+tissue_type_Face = ifelse(PAM50_switch_mat[levels(df_PAM50_genefu_melt$ID)] == "Yes", "bold", "plain")
+
+PAM50final = ggplot(df_PAM50_genefu_melt, aes(x = ID, y="Assignment", fill=`PAM50 Final`))+
+  geom_tile(show.legend = T,color="black")+xlab("")+ylab("")+scale_fill_manual("Assignment", values = pam50_cols)+
+  coord_flip() + myTheme + blankTheme + 
+  theme(axis.text.y = element_text(color = tissue_type_col, face = tissue_type_Face), 
+        axis.ticks.y = element_blank(),
+        axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1), legend.position = "left")# + 
+
+
+# legends
+legends = ggarrange(plotlist = list(get_legend(PAM50final),get_legend(PAM50)), 
+                    nrow = 2, widths = c(0.5,0.5), heights = c(1,1.5), align = 'v')
+
+
+# merge panels + legends
+fig3a = ggarrange(plotlist = list(PAM50final + theme(legend.position = 'none'), 
+                          PAM50 + theme(legend.position = 'none'), 
+                          legends),  ncol = 3, widths = c(0.5,0.9,0.4),  heights = c(4,4,2))
+
+
+###########################################
+
+
+fig3a
+
+```
+
+```{r}
+########################################### Figure 3B PAM50 assignment barplots -------------------------------------------------
+df_PAM50_genefu = data.frame(SampleID = clinData_OvaryMetCohort_no_normal$SampleID)
+rownames(df_PAM50_genefu) = df_PAM50_genefu$SampleID
+df_PAM50_genefu$PAM50 = factor(pam50.output.df[rownames(df_PAM50_genefu),"PAM50.subtype"], levels = c("LumA", "LumB", "Basal", "Her2", "Normal"))
+
+df_PAM50_genefu$Subtype = clinData_OvaryMetCohort_no_normal[df_PAM50_genefu$SampleID,"Subtype"]
+df_PAM50_genefu$Study_Code = clinData_OvaryMetCohort_no_normal[df_PAM50_genefu$SampleID,"Study_Code"]
+df_PAM50_genefu$TissueType = factor(x = clinData_OvaryMetCohort_no_normal[df_PAM50_genefu$SampleID,"TissueType"], levels = c("Primary","Metastasis"))
+df_PAM50_genefu$ER = clinData_OvaryMetCohort_no_normal[df_PAM50_genefu$SampleID, "ER"]
+df_PAM50_genefu$HER2 = clinData_OvaryMetCohort_no_normal[df_PAM50_genefu$SampleID, "HER2"]
+df_PAM50_genefu$Patient_ID = clinData_OvaryMetCohort_no_normal[df_PAM50_genefu$SampleID, "Patient_ID"]
+df_PAM50_genefu$Paired = clinData_OvaryMetCohort_no_normal[df_PAM50_genefu$SampleID, "Paired"]
+df_PAM50_genefu$Site = clinData_OvaryMetCohort_no_normal[df_PAM50_genefu$SampleID, "TissueSite"]
+
+df_PAM50_genefu$SampleID = factor(df_PAM50_genefu$SampleID, 
+                                  levels = clinData_OvaryMetCohort_no_normal$SampleID[order(clinData_OvaryMetCohort_no_normal$Patient_ID, 
+                                                                                   clinData_OvaryMetCohort_no_normal$TissueType, decreasing = T)])
+```
+
+
+### Fig 3b - PAM50 assignment across Subtypes
+```{r, fig.height=4, fig.width=10}
+make_pam50_barplot = function(df_PAM50_genefu, showlegend = F){
+  table(clinData_OvaryMetCohort_no_normal$TissueType)
+  pri_met_pam50_freq = df_PAM50_genefu %>% group_by(TissueType, `PAM50`) %>% summarise(n = n()) %>% group_by(TissueType) %>% 
+    mutate(Percentage = 100*n/sum(n)) %>% as.data.frame()
+  pri_met_pam50_freq[pri_met_pam50_freq$TissueType %in% "Primary","order"] = order(pri_met_pam50_freq[pri_met_pam50_freq$TissueType %in% "Primary",
+                                                                                                      "Percentage"], decreasing = T)
+  pri_met_pam50_freq[pri_met_pam50_freq$TissueType %in% "Metastasis","order"]=order(pri_met_pam50_freq[pri_met_pam50_freq$TissueType %in% "Metastasis",
+                                                                                                       "Percentage"], decreasing = T)
+  pri_met_pam50_freq = pri_met_pam50_freq[order(pri_met_pam50_freq$Percentage),]
+  
+  ## ALL PRI AND MET
+  pri_n = sum(subset(pri_met_pam50_freq, TissueType %in% "Primary")$n)
+  met_n = sum(subset(pri_met_pam50_freq, TissueType %in% "Metastasis")$n)
+  
+  set.seed(1432); fig = ggplot(pri_met_pam50_freq, aes(TissueType, Percentage, fill = reorder(`PAM50`,X = order)))+
+  geom_bar(stat = "identity", color="black", show.legend = showlegend)+
+  scale_fill_manual("PAM50",values = pam50_cols)+myTheme+xlab("") + 
+  annotate("text", label = paste("N =",pri_n), fontface="bold", size = 4.5, color="darkgray", x = 1, y = -4) + 
+  annotate("text", fontface="bold", size = 4.5, color="darkgray", label = paste("N =",met_n), x = 2, y = -4) + 
+  geom_label(aes(label = n), hjust = 0.5, vjust = 0.6, fill="white", fontface ="bold", size = 4, show.legend = showlegend, position = "stack")
+  
+  return(fig)
+}
+
+fig3b_1 = make_pam50_barplot(df_PAM50_genefu, showlegend = F)
+fig3b_2 = make_pam50_barplot(subset(df_PAM50_genefu, Subtype %in% "ILC"), showlegend = F)
+fig3b_3 = make_pam50_barplot(subset(df_PAM50_genefu, Subtype %in% "mDLC"), showlegend = F)
+fig3b_4 = make_pam50_barplot(subset(df_PAM50_genefu, Subtype %in% "IDC"), showlegend = F)
+
+fig3b = ggarrange(plotlist = list(fig3b_1, fig3b_2, fig3b_3, fig3b_4), ncol = 4)
+
+###########################################
+
+
+fig3b
+
+```
+
+
+
