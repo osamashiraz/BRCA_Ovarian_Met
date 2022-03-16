@@ -1,37 +1,32 @@
-## Welcome to GitHub Pages
+[Github.io page](https://osamashiraz.github.io/LO_Lab_CASR_2021/)
 
-You can use the [editor on GitHub](https://github.com/osamashiraz/LO_Lab_CASR_2021/edit/main/README.md) to maintain and preview the content for your website in Markdown files.
+main.RMD contains the code used to generate data presented in following
+work: (Identifying Genomic Alterations in Stage IV Breast Cancer
+Patients using MammaSeq<sup>TM</sup>: An International Collaborative
+Study)\[<a href="https://www.sciencedirect.com/science/article/abs/pii/S1526820920302135" class="uri">https://www.sciencedirect.com/science/article/abs/pii/S1526820920302135</a>\]
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+# PREPARATION
+```r
 
-### Markdown
+# Install all these packages
+#>.....
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+setwd("../scripts/")
 
-```markdown
-Syntax highlighted code block
+# PREPARE ENVIRONMENT
+source("helperFunctions.R")
 
-# Header 1
-## Header 2
-### Header 3
+# LOAD INPUT RNASEQ DATA AND ANNOTATIONS
+source("./preparation/a.prepare_RNAseq_exp_mats.R")
+source("./preparation/b.prepare_annotations.R")
+clinData = prepareAnnotations()
 
-- Bulleted
-- List
+source("./preparation/load_colors.R")
+#source("./preparation/c.prepare_DNAseq_mat.R")
 
-1. Numbered
-2. List
+# Supplementary data 2 
+icesTAF::mkdir("../output/supplementary_data")
+writexl::write_xlsx(subset(clinData, Study_Code %in% "Ovary" & TissueType %notin% "Normal"), 
+                    path = "../output/supplementary_data/Supplementary data 2 - PAM50 and tumor purity.xlsx")
 
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
 ```
-
-For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/osamashiraz/LO_Lab_CASR_2021/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
