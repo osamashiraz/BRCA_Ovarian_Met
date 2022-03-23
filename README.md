@@ -3,14 +3,6 @@ increased activity of GPCR pathways 2022
 ================
 Osama Shiraz Shah
 
-<style type="text/css">
-.main-container {
-  max-width: 1800px;
-  margin-left: auto;
-  margin-right: auto;
-}
-</style>
-
 # DISCLAIMER
 
 This rmarkdown is produced to reproduce the bioinformatics data in
@@ -19,7 +11,25 @@ pathways”. Run the script in sequential order. Make sure packages listed
 in the session info text file are installed. Changes in R and/or its
 package versions may result in changes in the expected output.
 
+``` r
+knitr::opts_chunk$set(echo = T, warning = F, message = F)
+```
+
 # INSTALL PACKAGES
+
+``` r
+## uncomment if needed
+# required_packages = read.csv(file = "required_packages.csv")$x
+# installed_packages <- required_packages %in% rownames(installed.packages())
+# missing_packages <- setdiff(required_packages, rownames(installed.packages()))
+# 
+# print(paste0("Missing Packages : ", length(missing_packages)))
+# 
+# if (any(installed_packages == FALSE)) {
+#   install.packages(required_packages[!installed_packages])
+#   BiocManager::install(required_packages[!installed_packages])
+# }
+```
 
 # PREPARATION
 
