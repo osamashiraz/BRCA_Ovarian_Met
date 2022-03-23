@@ -1,0 +1,7 @@
+label	pval	fdr	signature	geneset	overlap	background	hits	abr_label	logpval
+Amyotrophic Lateral Sclerosis Als	0.033	1	15	53	1	23467	PRPH	Amyotrophic Lateral Sclerosis Als	1.48148606012211
+Arachidonic Acid Metabolism	0.036	1	15	58	1	23467	CYP2B6	Arachidonic Acid Metabolism	1.44369749923271
+Retinol Metabolism	0.04	1	15	64	1	23467	CYP2B6	Retinol Metabolism	1.39794000867204
+Ppar Signaling Pathway	0.043	1	15	69	1	23467	UCP1	Ppar Signaling Pathway	1.36653154442041
+Metabolism Of Xenobiotics By Cytochrome P450	0.044	1	15	70	1	23467	CYP2B6	Metabolism Of Xenobiotics By Cytochrome P450	1.35654732351381
+Drug Metabolism Cytochrome P450	0.045	1	15	72	1	23467	CYP2B6	Drug Metabolism Cytochrome P450	1.34678748622466

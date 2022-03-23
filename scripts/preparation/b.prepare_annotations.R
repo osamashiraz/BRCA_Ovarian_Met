@@ -31,8 +31,10 @@ prepareAnnotations = function(){
   
   # 3. ER inferred from mRNA
   source("./preparation/inferER.R")
-  er_status_df = inferER(log2_tpm_genes, clinData)
+  # er_status_df = inferER(log2_tpm_genes, clinData) # do not run again
+  load("../output/annotations/ER_infered/er_status_df.Rdata")
   table(er_status_df$ER, er_status_df$ER_infered)
+  dim(er_status_df)
   
   clinData$ER_infered = er_status_df[clinData$SampleID, "ER_infered"]
   
@@ -42,13 +44,9 @@ prepareAnnotations = function(){
   source("./preparation/PAM50.R")
   # makePAM50calls(log2_tpm_genes, clinData, er_status_df) # do not run again
   
-  ## Plot PAM50
+  ## add PAM50 to clinical data
   pam50.output.df = read.delim("../output/annotations/PAM50/pam50_calls.txt")
   rownames(pam50.output.df)=pam50.output.df$X
-  
-  pam50.prob.df = read.delim("../output/annotations/PAM50/pam50_probs.txt")
-  rownames(pam50.prob.df)=pam50.prob.df$X
-  pam50.prob.df = pam50.prob.df[,-1]
   
   clinData$PAM50 = pam50.output.df[clinData$SampleID,"PAM50.subtype"]
   

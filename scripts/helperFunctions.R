@@ -156,6 +156,24 @@ lib_size_scaling = function(mat, lib.scale = 1e6){
 
 
 
+## annotate deseq output with gene names
+annotate_DESeqOut = function(DESeq_out, geneGroupMap, geneMapping = T, fromType = "ENSEMBL", toType = "SYMBOL"){
+  if (geneMapping){
+    map = gene_name_conversion(rownames(DESeq_out), fromType = fromType, toType = toType)
+    DESeq_out[map$ENSEMBL,"Gene"]=map$SYMBOL
+    DESeq_out[geneGroupMap$`Ensembl gene ID`,"Group"]=geneGroupMap$`Gene group name`
+    DESeq_out[geneGroupMap$`Ensembl gene ID`,"GroupID"]=geneGroupMap$`Gene group ID`
+    DESeq_out = DESeq_out[!is.na(DESeq_out$Gene),]
+  }else{
+    DESeq_out$Gene = rownames(DESeq_out)
+    DESeq_out[geneGroupMap$`Approved symbol`,"Group"]=geneGroupMap$`Gene group name`
+    DESeq_out[geneGroupMap$`Approved symbol`,"GroupID"]=geneGroupMap$`Gene group ID`
+    DESeq_out = DESeq_out[!is.na(DESeq_out$Gene),]
+  }
+  return(DESeq_out)
+}
+
+
 
 ## Qorts QC functions
 getColors = function(x){
@@ -200,7 +218,7 @@ mkDF_scores = function(scoreMat, signature, clinData){
   # browser()
   IDs = intersect(colnames(scoreMat),clinData$SampleID)
   clinData = clinData[IDs,]
-  data.frame(
+  sigDF = data.frame(
     score = as.numeric(scoreMat[signature, clinData$SampleID]), 
     SampleIDs= clinData$SampleID, 
     Subtype = clinData$Subtype, 
@@ -209,14 +227,31 @@ mkDF_scores = function(scoreMat, signature, clinData){
     Site = clinData$TissueSite, 
     ER_infered = clinData$ER_infered, 
     ER = clinData$ER, 
-    PR = clinData$PR,
-    HER2 = clinData$HER2,
     Study = clinData$Study_Code,
     PAM50 = clinData$PAM50,
     Paired = clinData$Paired,
     Purity = clinData$Estimate_Purity,
     stringsAsFactors = F
   )
+  
+  sigDF[sigDF$Group %in% "Ov11" & sigDF$TissueType %in% "Metastasis","Group"] = 
+    paste0(sigDF[sigDF$Group %in% "Ov11" & sigDF$TissueType %in% "Metastasis","Group"], c("a","b"))
+  
+  sigDF$TissueType = factor(sigDF$TissueType, levels = c("Primary","Metastasis"))
+  
+  ov11_pri = sigDF[sigDF$Group %in% "Ov11" & sigDF$TissueType %in% "Primary",]
+  ov11_pri = rbind(ov11_pri, ov11_pri)
+  ov11_pri$Group = paste0(ov11_pri$Group, c("a", "b"))
+  sigDF = sigDF[!(sigDF$Group %in% "Ov11" & sigDF$TissueType %in% "Primary"),]
+  sigDF = rbind(sigDF, ov11_pri)
+  sigDF[sigDF$Group %in% "Ov11" & sigDF$TissueType %in% "Metastasis","Group"] = paste0(sigDF[sigDF$Group %in% "Ov11" & 
+                                                                                               sigDF$TissueType %in% "Metastasis","Group"], c("a","b"))
+  sigDF[sigDF$Group %in% "Ov11b",]
+  
+  sigDF[sigDF$Group %in% "Ov14" & sigDF$TissueType %in% "Metastasis","Group"] = paste0(sigDF[sigDF$Group %in% "Ov14" & 
+                                                                                               sigDF$TissueType %in% "Metastasis","Group"], c("a","b"))
+  
+  return(sigDF)
 }
 
 

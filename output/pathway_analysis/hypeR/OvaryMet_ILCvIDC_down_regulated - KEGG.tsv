@@ -1,0 +1,10 @@
+label	pval	fdr	signature	geneset	overlap	background	hits	abr_label	logpval
+Pathogenic Escherichia Coli Infection	0.001	0.19	20	56	2	23467	CDH1,TUBB3	Pathogenic Escherichia Coli Infection	3
+Proximal Tubule Bicarbonate Reclamation	0.019	0.9	20	23	1	23467	ATP1A3	Proximal Tubule Bicarbonate Reclamation	1.72124639904717
+Pentose Phosphate Pathway	0.023	0.9	20	27	1	23467	G6PD	Pentose Phosphate Pathway	1.63827216398241
+Thyroid Cancer	0.024	0.9	20	29	1	23467	CDH1	Thyroid Cancer	1.61978875828839
+Tryptophan Metabolism	0.034	0.9	20	40	1	23467	KMO	Tryptophan Metabolism	1.46852108295774
+Aldosterone Regulated Sodium Reabsorption	0.035	0.9	20	42	1	23467	ATP1A3	Aldosterone Regulated Sodium Reabsorption	1.45593195564972
+Bladder Cancer	0.035	0.9	20	42	1	23467	CDH1	Bladder Cancer	1.45593195564972
+Glutathione Metabolism	0.042	0.9	20	50	1	23467	G6PD	Glutathione Metabolism	1.3767507096021
+Endometrial Cancer	0.043	0.9	20	52	1	23467	CDH1	Endometrial Cancer	1.36653154442041

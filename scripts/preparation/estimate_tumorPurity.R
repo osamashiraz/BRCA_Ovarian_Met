@@ -3,15 +3,13 @@ sort(tumorPurityScores[4,])
 
 ### DO NOT RUN AGAIN -----------------------
 
-# 
-# # # LOAD ANNOTATIONS
+# # # # LOAD ANNOTATIONS
 # clinData = read.csv("../input/Clinical_annotations.csv",stringsAsFactors = F)
 # rownames(clinData) = clinData$SampleID
 # 
 # # LOAD TPM VALUES
 # load("../input/log2_tpm_genes.Rdata")
 # rownames(log2_tpm_genes) = make.unique(rownames(log2_tpm_genes))
-# 
 # 
 # library(estimate)
 # 
@@ -47,6 +45,7 @@ sort(tumorPurityScores[4,])
 # 
 # # SAVE ESTIMATE OUT
 # tumorPurityScores = data.matrix(estimate_out_illumina)
+# sort(tumorPurityScores[4,])
 # save(tumorPurityScores, file= "../output/annotations/ESTIMATE/ESTIMATE_scores_final.RData")
 
 

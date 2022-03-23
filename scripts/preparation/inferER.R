@@ -23,5 +23,7 @@ inferER = function(log2_tpm_genes, clinData){
   #                             aes(label = patientID))
   # 
 # subset(er_status_df, patientID %in% c("Ov13","Ov12"))
+  icesTAF::mkdir("../output/annotations/ER_infered/")
+  save(er_status_df, file = "../output/annotations/ER_infered/er_status_df.Rdata")
   return(er_status_df)
 }
