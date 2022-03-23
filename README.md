@@ -84,7 +84,7 @@ circos.heatmap((clinData_Ovary_Met$Paired), col = annot_col$`Metastasis Type`)
 circos.heatmap((clinData_Ovary_Met$ER_infered), col = annot_col$ER)
 ```
 
-![](2021-12-02---CASR-Final-Clean_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+![](index/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
 
 ``` r
 fig1a = recordPlot()
@@ -190,7 +190,7 @@ set.seed(123); vcd::assoc(table(clinData_mets_ovaryVSother$Subtype, clinData_met
                                                                        gp_labels = gpar(fontsize = 15, fontface="bold")))
 ```
 
-![](2021-12-02---CASR-Final-Clean_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+![](index/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
 
 # …………………………………………………………………………….
 
@@ -236,7 +236,7 @@ supFig5a = ggarrange(plotlist = list(supFig5a_left, supFig5a_3), ncol = 2, nrow 
 supFig5a
 ```
 
-![](2021-12-02---CASR-Final-Clean_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+![](index/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
 
 ``` r
 # supFig5a_left_plotly = plotly::subplot(supFig5a_1, supFig5a_2, nrows = 2)
@@ -287,7 +287,7 @@ set.seed(123); tumorMatch_HT = Heatmap(simMat, col = viridis::magma((100)), name
 draw(tumorMatch_HT, merge = T)
 ```
 
-![](2021-12-02---CASR-Final-Clean_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+![](index/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
 
 ``` r
 ##### PREPARE INPUTS FOR EXPLORATORY ANALYSIS
@@ -371,7 +371,7 @@ set.seed(123); dist_ht = Heatmap(sampleDists, show_column_names = F,
 draw(dist_ht, merge = T,  heatmap_legend_side = "bottom")
 ```
 
-![](2021-12-02---CASR-Final-Clean_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+![](index/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
 
 ### Sup Fig 5D - PCA Analysis
 
@@ -467,7 +467,7 @@ supFig5d = ggarrange(plotlist = list(supFig5d_2, supFig5d_4, supFig5d_3, supFig5
 supFig5d
 ```
 
-![](2021-12-02---CASR-Final-Clean_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
+![](index/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
 
 ## Figure 3 - PAM50 subtyping and molecular landscape of ovary metastasis
 
@@ -595,7 +595,7 @@ fig3a = ggarrange(plotlist = list(PAM50final + theme(legend.position = 'none'),
 fig3a
 ```
 
-![](2021-12-02---CASR-Final-Clean_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
+![](index/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
 
 ``` r
 ########################################### Figure 3B PAM50 assignment barplots -------------------------------------------------
@@ -656,7 +656,7 @@ fig3b = ggarrange(plotlist = list(fig3b_1, fig3b_2, fig3b_3, fig3b_4), ncol = 4)
 fig3b
 ```
 
-![](2021-12-02---CASR-Final-Clean_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
+![](index/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
 
 ### Fig 3C - Ovary Metastasis Subtype Exploratory Analysis
 
@@ -798,7 +798,7 @@ fig3c = ggarrange(plotlist = list(fig3c_1, fig3c_2, fig3c_3, fig3c_4), ncol = 2,
 fig3c
 ```
 
-![](2021-12-02---CASR-Final-Clean_files/figure-gfm/unnamed-chunk-23-1.png)<!-- -->
+![](index/figure-gfm/unnamed-chunk-23-1.png)<!-- -->
 
 ### Fig 3D - CDH1 Expression
 
@@ -842,7 +842,7 @@ fig3D = ggplot(met_cdh1_df, aes(reorder(Subtype, geneLog2TPM), geneLog2TPM, labe
 fig3D
 ```
 
-![](2021-12-02---CASR-Final-Clean_files/figure-gfm/unnamed-chunk-26-1.png)<!-- -->
+![](index/figure-gfm/unnamed-chunk-26-1.png)<!-- -->
 
 ### Fig 3E - Ovary Metastasis ILC vs IDC DEA
 
@@ -904,7 +904,7 @@ fig3E = ggplot(OvILCvsIDC_met, aes(x = log2FoldChange, y = -log10(padj), color =
 fig3E
 ```
 
-![](2021-12-02---CASR-Final-Clean_files/figure-gfm/unnamed-chunk-30-1.png)<!-- -->
+![](index/figure-gfm/unnamed-chunk-30-1.png)<!-- -->
 
 ### Fig 3F - KEGG Pathway Analysis
 
@@ -952,7 +952,7 @@ ggarrange(plotlist = list(dn_reg_df$plt + theme(axis.title.x = element_text(size
                           up_reg_df$plt + theme(axis.title.x = element_text(size = 15)) + xlab("-log10 Pvalue")))
 ```
 
-![](2021-12-02---CASR-Final-Clean_files/figure-gfm/unnamed-chunk-32-1.png)<!-- -->
+![](index/figure-gfm/unnamed-chunk-32-1.png)<!-- -->
 
 ## Sup Figure 6 - DEA Scheme for identification of ovarian metastasis associated DEGs
 
@@ -1009,7 +1009,7 @@ ggplot(OvaMetvsPri, aes(x = log2FoldChange, y = -log10(padj), color = factor(log
   ylim(c(-10, max(OvaMetvsPri$log10Padj)))
 ```
 
-![](2021-12-02---CASR-Final-Clean_files/figure-gfm/unnamed-chunk-35-1.png)<!-- -->
+![](index/figure-gfm/unnamed-chunk-35-1.png)<!-- -->
 
 ### DEA Analysis 2 - Normal Ovary vs Primary Tumor (as shown in Sup Fig 6A)
 
@@ -1062,7 +1062,7 @@ ggplot(OvaryVsPri_sig, aes(x = log2FoldChange, y = -log10(padj), color = factor(
   ylim(c(-10, max(OvaryVsPri$log10Padj))) + xlim(c(-15, 15))
 ```
 
-![](2021-12-02---CASR-Final-Clean_files/figure-gfm/unnamed-chunk-38-1.png)<!-- -->
+![](index/figure-gfm/unnamed-chunk-38-1.png)<!-- -->
 
 ### Sup Fig 6B - Backgroun Correction
 
@@ -1186,7 +1186,7 @@ print(paste0(table(site_contam_df_DN[!duplicated(site_contam_df_DN$Gene), "dn_in
 ggarrange(plotlist = list(supFig6B_1, supFig6B_2))
 ```
 
-![](2021-12-02---CASR-Final-Clean_files/figure-gfm/unnamed-chunk-44-1.png)<!-- -->
+![](index/figure-gfm/unnamed-chunk-44-1.png)<!-- -->
 ### REMOVE BACKGROUND CONTAMINCATIONS
 
 ``` r
@@ -1245,7 +1245,7 @@ fig4A = ggplot(OvaMetvsPri_corrected, aes(x = log2FoldChange, y = -log10(padj), 
 fig4A
 ```
 
-![](2021-12-02---CASR-Final-Clean_files/figure-gfm/unnamed-chunk-48-1.png)<!-- -->
+![](index/figure-gfm/unnamed-chunk-48-1.png)<!-- -->
 
 ### Fig 4B - Heatmap of Corrected Ovary Metastasis DEGs
 
@@ -1317,7 +1317,7 @@ OvaMet_sigDEG_Ht = makeDEG_Heatmap(DEG_df = OvaMetvsPri_sig_corrected, clinData_
 draw(OvaMet_sigDEG_Ht$deg_ht + OvaMet_sigDEG_Ht$right_HT, merge_legend = TRUE, heatmap_legend_side = "right")
 ```
 
-![](2021-12-02---CASR-Final-Clean_files/figure-gfm/unnamed-chunk-51-1.png)<!-- -->
+![](index/figure-gfm/unnamed-chunk-51-1.png)<!-- -->
 
 ``` r
 # Add statistics to df - selecting top genes based on effect size
@@ -1437,7 +1437,7 @@ fig4C = ggplot(df_sub, aes(y = reorder(abr_label, logpval), x = logpval, label =
 fig4C
 ```
 
-![](2021-12-02---CASR-Final-Clean_files/figure-gfm/unnamed-chunk-55-1.png)<!-- -->
+![](index/figure-gfm/unnamed-chunk-55-1.png)<!-- -->
 
 ### Fig 4D - GSVA Scoring of Gulatamate Receptor Pathway
 
@@ -1494,7 +1494,7 @@ fig4D_2 = ggplot(metabotrophic_gsva, aes(TissueType, score, label = SampleIDs)) 
 ggarrange(plotlist = list(fig4D_2, fig4D_1))
 ```
 
-![](2021-12-02---CASR-Final-Clean_files/figure-gfm/unnamed-chunk-59-1.png)<!-- -->
+![](index/figure-gfm/unnamed-chunk-59-1.png)<!-- -->
 
 ### Fig 4E - Heatmap of Top Significant DEGs associated with Ovarian Metastasis
 
@@ -1503,7 +1503,7 @@ OvaMet_TOP_sigDEG_Ht = makeDEG_Heatmap(DEG_df = top_sig_DEGs_df, clinData_select
 draw(OvaMet_TOP_sigDEG_Ht$deg_ht + OvaMet_TOP_sigDEG_Ht$right_HT, merge_legend = TRUE, heatmap_legend_side = "right")
 ```
 
-![](2021-12-02---CASR-Final-Clean_files/figure-gfm/unnamed-chunk-60-1.png)<!-- -->
+![](index/figure-gfm/unnamed-chunk-60-1.png)<!-- -->
 
 ### Fig 4F - CASR Gene Expression
 
@@ -1557,7 +1557,7 @@ fig4F_2 = ggplot(casr_df, aes(Site, geneLog2TPM, label = SampleIDs)) + ## AES
 ggarrange(plotlist = list(fig4F_1, fig4F_2))
 ```
 
-![](2021-12-02---CASR-Final-Clean_files/figure-gfm/unnamed-chunk-63-1.png)<!-- -->
+![](index/figure-gfm/unnamed-chunk-63-1.png)<!-- -->
 
 # …………………………………………………………………………….
 
@@ -1611,7 +1611,7 @@ set.seed(123); supFig2a = Heatmap(matrix = t(coverages_log2), col = colFun, row_
 supFig2a
 ```
 
-![](2021-12-02---CASR-Final-Clean_files/figure-gfm/unnamed-chunk-67-1.png)<!-- -->
+![](index/figure-gfm/unnamed-chunk-67-1.png)<!-- -->
 
 ### Sup Fig 2B - Overall Coverage
 
@@ -1632,7 +1632,7 @@ supFig2b = ggplot(coverage_df, aes(x = reorder(ID, Coverage), y = Coverage, fill
 supFig2b
 ```
 
-![](2021-12-02---CASR-Final-Clean_files/figure-gfm/unnamed-chunk-69-1.png)<!-- -->
+![](index/figure-gfm/unnamed-chunk-69-1.png)<!-- -->
 
 ### Sup Fig 2C - SNV Count Before/After Filtering
 
@@ -1676,7 +1676,7 @@ supFig2c = ggplot(melt_df, aes(reorder(Var2,value), value, fill = Var1)) + geom_
 supFig2c
 ```
 
-![](2021-12-02---CASR-Final-Clean_files/figure-gfm/unnamed-chunk-71-1.png)<!-- -->
+![](index/figure-gfm/unnamed-chunk-71-1.png)<!-- -->
 
 ## Figure 2 - Mutational Landscape of ovarian metastasis cohort
 
@@ -1709,7 +1709,7 @@ fig2a = ggplot(mutational_change_paired, aes(x = genes, y = factor(variable), fi
 fig2a
 ```
 
-![](2021-12-02---CASR-Final-Clean_files/figure-gfm/unnamed-chunk-74-1.png)<!-- -->
+![](index/figure-gfm/unnamed-chunk-74-1.png)<!-- -->
 
 ### Fig 2B - Oncoprint
 
@@ -1719,7 +1719,7 @@ fig_2B = generate_oncoprint(split_by = c("Subtype","Patient_ID"), clinData = cli
 draw(fig_2B, merge_legend = TRUE, heatmap_legend_side = "right")
 ```
 
-![](2021-12-02---CASR-Final-Clean_files/figure-gfm/unnamed-chunk-75-1.png)<!-- -->
+![](index/figure-gfm/unnamed-chunk-75-1.png)<!-- -->
 
 ### Fig 2D - Nanostring Copy Number
 
@@ -1770,7 +1770,7 @@ set.seed(123); fig_2D = Heatmap(matrix = CNV_mat, show_column_names = F, col = c
 fig_2D
 ```
 
-![](2021-12-02---CASR-Final-Clean_files/figure-gfm/unnamed-chunk-78-1.png)<!-- -->
+![](index/figure-gfm/unnamed-chunk-78-1.png)<!-- -->
 
 ## Sup Figure - Mutational landscape of all (paired + orphan) ovarian metastatic samples and clinical actionability analysis
 
@@ -1793,7 +1793,7 @@ supFig3A = ggplot(mutational_change_All, aes(x = genes, y = factor(variable), fi
 supFig3A
 ```
 
-![](2021-12-02---CASR-Final-Clean_files/figure-gfm/unnamed-chunk-80-1.png)<!-- -->
+![](index/figure-gfm/unnamed-chunk-80-1.png)<!-- -->
 
 ### Sup Fig 3B - Oncoprint by Subtype Across Ovary metastasis Cohort
 
@@ -1803,7 +1803,7 @@ tumor.ht = generate_oncoprint(split_by = c("Subtype"), clinData = clinData, mat.
 draw(tumor.ht, merge_legend = TRUE, heatmap_legend_side = "right")
 ```
 
-![](2021-12-02---CASR-Final-Clean_files/figure-gfm/unnamed-chunk-81-1.png)<!-- -->
+![](index/figure-gfm/unnamed-chunk-81-1.png)<!-- -->
 
 ### Sup Fig 3C - Clinically Actionable Mutations
 
@@ -1863,7 +1863,7 @@ venn[[7]]$label  <- paste(intersect(variants.PMKB, variants.Onco), collapse="\n"
 grid.newpage(); grid.draw(venn) # print figure
 ```
 
-![](2021-12-02---CASR-Final-Clean_files/figure-gfm/unnamed-chunk-84-1.png)<!-- -->
+![](index/figure-gfm/unnamed-chunk-84-1.png)<!-- -->
 
 ### Sup Fig 3D - Oncoprint of clinically significant variants
 
@@ -1874,7 +1874,7 @@ pathogenic_tumor.ht = generate_oncoprint(split_by = c("Subtype"), clinData = cli
 draw(pathogenic_tumor.ht, merge_legend = TRUE, heatmap_legend_side = "right")
 ```
 
-![](2021-12-02---CASR-Final-Clean_files/figure-gfm/unnamed-chunk-85-1.png)<!-- -->
+![](index/figure-gfm/unnamed-chunk-85-1.png)<!-- -->
 
 #…………………………………………………
 
