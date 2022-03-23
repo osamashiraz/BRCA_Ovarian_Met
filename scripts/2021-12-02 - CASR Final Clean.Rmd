@@ -2,11 +2,7 @@
 title: "Bioinformatics Analysis - Breast cancer ovarian metastases show increased activity of GPCR pathways 2022"
 author: "Osama Shiraz Shah"
 updated on: "`r Sys.Date()`"
-output: 
-  prettydoc::html_pretty:
-    theme: Cayman
-  md_document:
-    variant: markdown_github
+output: github_document
 editor_options: 
   chunk_output_type: inline
 ---
