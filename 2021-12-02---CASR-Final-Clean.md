@@ -3,14 +3,6 @@ increased activity of GPCR pathways 2022
 ================
 Osama Shiraz Shah
 
-<style type="text/css">
-.main-container {
-  max-width: 1800px;
-  margin-left: auto;
-  margin-right: auto;
-}
-</style>
-
 # DISCLAIMER
 
 This rmarkdown is produced to reproduce the bioinformatics data in
