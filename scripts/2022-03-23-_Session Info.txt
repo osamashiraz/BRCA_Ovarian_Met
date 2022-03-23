@@ -53,38 +53,37 @@ loaded via a namespace (and not attached):
  [55] lazyeval_0.2.2         broom_0.7.9            yaml_2.2.1            
  [58] abind_1.4-5            backports_1.2.1        httpuv_1.6.3          
  [61] qvalue_2.24.0          tools_4.1.1            ggplotify_0.1.0       
- [64] kableExtra_1.3.4       ellipsis_0.3.2         jquerylib_0.1.4       
- [67] RColorBrewer_1.1-2     Rcpp_1.0.7             plyr_1.8.6            
- [70] visNetwork_2.1.0       zlibbioc_1.38.0        purrr_0.3.4           
- [73] RCurl_1.98-1.5         GetoptLong_1.0.5       viridis_0.6.1         
- [76] zoo_1.8-9              haven_2.4.3            ggrepel_0.9.1         
- [79] cluster_2.1.2          futile.options_1.0.1   data.table_1.14.2     
- [82] magick_2.7.3           DO.db_2.9              openxlsx_4.2.4        
- [85] lmtest_0.9-38          mime_0.12              reactable_0.2.3       
- [88] hms_1.1.1              patchwork_1.1.1        evaluate_0.14         
- [91] xtable_1.8-4           XML_3.99-0.8           rio_0.5.27            
- [94] icesTAF_3.6.0          readxl_1.3.1           shape_1.4.6           
- [97] compiler_4.1.1         tibble_3.1.5           writexl_1.4.0         
-[100] crayon_1.4.1           shadowtext_0.0.9       htmltools_0.5.2       
-[103] later_1.3.0            ggfun_0.0.4            tidyr_1.1.4           
-[106] geneplotter_1.70.0     aplot_0.1.1            DBI_1.1.1             
-[109] formatR_1.11           tweenr_1.0.2           MASS_7.3-54           
-[112] babelgene_21.4         Matrix_1.3-4           car_3.0-11            
-[115] igraph_1.2.6           forcats_0.5.1          pkgconfig_2.0.3       
-[118] foreign_0.8-81         xml2_1.3.2             roxygen2_7.1.2        
-[121] foreach_1.5.1          svglite_2.0.0          ggtree_3.0.4          
-[124] annotate_1.70.0        vipor_0.4.5            bslib_0.3.1           
-[127] webshot_0.5.2          XVector_0.32.0         rvest_1.0.1           
-[130] yulab.utils_0.0.4      stringr_1.4.0          digest_0.6.28         
-[133] Biostrings_2.60.2      rmarkdown_2.11         cellranger_1.1.0      
-[136] fastmatch_1.1-3        tidytree_0.3.5         edgeR_3.34.1          
-[139] curl_4.3.2             shiny_1.7.1            rjson_0.2.20          
-[142] lifecycle_1.0.1        nlme_3.1-153           jsonlite_1.7.2        
-[145] carData_3.0-4          limma_3.48.3           viridisLite_0.4.0     
-[148] fansi_0.5.0            pillar_1.6.3           lattice_0.20-45       
-[151] KEGGREST_1.32.0        fastmap_1.1.0          httr_1.4.2            
-[154] survival_3.2-13        GO.db_3.13.0           glue_1.4.2            
-[157] zip_2.2.0              png_0.1-7              iterators_1.0.13      
-[160] bit_4.0.4              ggforce_0.3.3          stringi_1.7.5         
-[163] sass_0.4.0             blob_1.2.2             memoise_2.0.0         
-[166] ape_5.5               
+ [64] ellipsis_0.3.2         kableExtra_1.3.4       RColorBrewer_1.1-2    
+ [67] Rcpp_1.0.7             plyr_1.8.6             visNetwork_2.1.0      
+ [70] zlibbioc_1.38.0        purrr_0.3.4            RCurl_1.98-1.5        
+ [73] GetoptLong_1.0.5       viridis_0.6.1          zoo_1.8-9             
+ [76] haven_2.4.3            ggrepel_0.9.1          cluster_2.1.2         
+ [79] futile.options_1.0.1   data.table_1.14.2      magick_2.7.3          
+ [82] DO.db_2.9              openxlsx_4.2.4         lmtest_0.9-38         
+ [85] mime_0.12              reactable_0.2.3        hms_1.1.1             
+ [88] patchwork_1.1.1        evaluate_0.14          xtable_1.8-4          
+ [91] XML_3.99-0.8           rio_0.5.27             icesTAF_3.6.0         
+ [94] readxl_1.3.1           shape_1.4.6            compiler_4.1.1        
+ [97] tibble_3.1.5           writexl_1.4.0          crayon_1.4.1          
+[100] shadowtext_0.0.9       htmltools_0.5.2        later_1.3.0           
+[103] ggfun_0.0.4            tidyr_1.1.4            geneplotter_1.70.0    
+[106] aplot_0.1.1            DBI_1.1.1              formatR_1.11          
+[109] tweenr_1.0.2           MASS_7.3-54            babelgene_21.4        
+[112] Matrix_1.3-4           car_3.0-11             igraph_1.2.6          
+[115] forcats_0.5.1          pkgconfig_2.0.3        foreign_0.8-81        
+[118] xml2_1.3.2             roxygen2_7.1.2         foreach_1.5.1         
+[121] svglite_2.0.0          ggtree_3.0.4           annotate_1.70.0       
+[124] vipor_0.4.5            webshot_0.5.2          XVector_0.32.0        
+[127] rvest_1.0.1            yulab.utils_0.0.4      stringr_1.4.0         
+[130] digest_0.6.28          Biostrings_2.60.2      rmarkdown_2.11        
+[133] cellranger_1.1.0       fastmatch_1.1-3        tidytree_0.3.5        
+[136] edgeR_3.34.1           curl_4.3.2             shiny_1.7.1           
+[139] rjson_0.2.20           lifecycle_1.0.1        nlme_3.1-153          
+[142] jsonlite_1.7.2         carData_3.0-4          limma_3.48.3          
+[145] viridisLite_0.4.0      fansi_0.5.0            pillar_1.6.3          
+[148] lattice_0.20-45        KEGGREST_1.32.0        fastmap_1.1.0         
+[151] httr_1.4.2             survival_3.2-13        GO.db_3.13.0          
+[154] glue_1.4.2             zip_2.2.0              png_0.1-7             
+[157] iterators_1.0.13       bit_4.0.4              ggforce_0.3.3         
+[160] stringi_1.7.5          blob_1.2.2             memoise_2.0.0         
+[163] ape_5.5               
