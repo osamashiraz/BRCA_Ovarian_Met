@@ -1,5 +1,4 @@
-Bioinformatics Analysis - Breast cancer ovarian metastases show
-increased activity of GPCR pathways 2022
+Breast cancer ovarian metastases show increased activity of GPCR pathways
 ================
 Osama Shiraz Shah
 
